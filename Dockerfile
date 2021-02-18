@@ -56,7 +56,6 @@ RUN git config --global user.name "ManusiaRakitan"
 
 RUN git clone -b x-sql-extended https://github.com/ManusiaRakitan/XBot-Remix /root/userbot
 RUN mkdir /root/userbot/.bin
-RUN pip install --upgrade pip setuptools
 WORKDIR /root/userbot
 
 #Install python requirements
