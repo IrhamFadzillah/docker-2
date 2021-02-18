@@ -54,16 +54,12 @@ RUN apk add --no-cache=true --update \
 RUN git config --global user.email "zcamel07@gmail.com"
 RUN git config --global user.name "ManusiaRakitan"
 
-RUN python3 -m ensurepip \
-    && pip3 install --upgrade pip setuptools \
-    && pip3 install wheel \
-    && rm -r /usr/lib/python*/ensurepip && \
-    if [ ! -e /usr/bin/pip ]; then ln -s pip3 /usr/bin/pip ; fi && \
-    if [[ ! -e /usr/bin/python ]]; then ln -sf /usr/bin/python3 /usr/bin/python; fi && \
-    rm -r /root/.cache
+RUN git clone -b x-sql-extended https://github.com/ManusiaRakitan/XBot-Remix /root/userbot
+RUN mkdir /root/userbot/.bin
+RUN pip install --upgrade pip setuptools
+WORKDIR /root/userbot
 
-ADD https://raw.githubusercontent.com/ManusiaRakitan/XBot-Remix/x-sql-extended/requirements.txt requirements.txt
-RUN pip install -r requirements.txt
+#Install python requirements
+RUN pip3 install -r https://raw.githubusercontent.com/ManusiaRakitan/XBot-Remix/x-sql-extended/requirements.txt
 
-RUN rm /bin/sh && ln -s /bin/bash /bin/sh
-CMD ["python3"]
+CMD ["python3","-m","userbot"]
