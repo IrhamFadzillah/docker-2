@@ -1,4 +1,4 @@
-FROM manusiarakitan/docker:groovy
+FROM ubuntu:groovy
 LABEL maintainer "manusiarakitan <zcamel07@gmail.com>"
  
 RUN ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
