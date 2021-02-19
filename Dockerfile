@@ -1,36 +1,35 @@
 FROM ubuntu:groovy
-LABEL maintainer "manusiarakitan <zcamel07@gmail.com>"
- 
+LABEL maintainer "ManusiaRakitan <zcamel07@gmail.com>"
+
 RUN ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 RUN apt update && apt -y upgrade && apt install -y --no-install-recommends tzdata locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 ENV LANGUAGE en_US:en
 ENV LC_ALL en_US.UTF-8
- 
+
 # ensure local python is preferred over distribution python
 ENV PATH /usr/local/bin:$PATH
- 
+
 # http://bugs.python.org/issue19846
 # > At the moment, setting "LANG=C" on a Linux system *fundamentally breaks Python 3*, and that's not OK.
 ENV LANG C.UTF-8
- 
+
 # runtime dependencies
 RUN apt-get install -y --no-install-recommends \
 		ca-certificates \
 		netbase \
 	&& rm -rf /var/lib/apt/lists/*
- 
+
 ENV GPG_KEY E3FF2839C048B25C084DEBE9B26995E310250568
 ENV PYTHON_VERSION 3.9.0
- 
+
 RUN set -ex \
 	\
 	&& savedAptMark="$(apt-mark showmanual)" \
 	&& apt-get update && apt-get install -y --no-install-recommends \
 		dpkg-dev \
 		gcc \
-		g++ \
 		libbluetooth-dev \
 		libbz2-dev \
 		libc6-dev \
@@ -101,20 +100,20 @@ RUN set -ex \
 	&& rm -rf /var/lib/apt/lists/* \
 	\
 	&& python3 --version
- 
+
 # make some useful symlinks that are expected to exist
 RUN cd /usr/local/bin \
 	&& ln -s idle3 idle \
 	&& ln -s pydoc3 pydoc \
 	&& ln -s python3 python \
 	&& ln -s python3-config python-config
- 
+
 # if this is called "PIP_VERSION", pip explodes with "ValueError: invalid truth value '<VERSION>'"
-ENV PYTHON_PIP_VERSION 21.0.1
+ENV PYTHON_PIP_VERSION 20.3.1
 # https://github.com/pypa/get-pip
-ENV PYTHON_GET_PIP_URL https://raw.githubusercontent.com/pypa/get-pip/4be3fe44ad9dedc028629ed1497052d65d281b8e/get-pip.py
+ENV PYTHON_GET_PIP_URL https://github.com/pypa/get-pip/raw/91630a4867b1f93ba0a12aa81d0ec4ecc1e7eeb9/get-pip.py
 ENV PYTHON_GET_PIP_SHA256 d48ae68f297cac54db17e4107b800faae0e5210131f9f386c30c0166bf8d81b7
- 
+
 RUN set -ex; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -143,9 +142,10 @@ RUN set -ex; \
 			\( -type f -a \( -name '*.pyc' -o -name '*.pyo' \) \) \
 		\) -exec rm -rf '{}' +; \
 	rm -f get-pip.py
- 
+
 RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
     apt-utils \
+    aria2 \
     bash \
     build-essential \
     curl \
@@ -171,12 +171,12 @@ RUN apt-get -qq update && apt-get -qq install -y --no-install-recommends \
     zlib1g-dev \
     megatools \
     p7zip-full
- 
+
 # Install google chrome
 RUN sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list' && \
     wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - && \
     apt-get -qq update && apt-get -qq install -y google-chrome-stable
- 
+
 # Install chromedriver
 RUN wget -N https://chromedriver.storage.googleapis.com/87.0.4280.20/chromedriver_linux64.zip -P ~/ && \
     unzip ~/chromedriver_linux64.zip -d ~/ && \
@@ -184,11 +184,11 @@ RUN wget -N https://chromedriver.storage.googleapis.com/87.0.4280.20/chromedrive
     mv -f ~/chromedriver /usr/bin/chromedriver && \
     chown root:root /usr/bin/chromedriver && \
     chmod 0755 /usr/bin/chromedriver
- 
+
 # Install python requirements
 RUN pip3 install --no-cache-dir -r https://raw.githubusercontent.com/ManusiaRakitan/XBot-Remix/x-sql-extended/requirements.txt --use-feature=2020-resolver
- 
+
 # Clean Up
 RUN apt-get clean --dry-run
- 
+
 CMD ["bash"]
