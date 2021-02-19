@@ -1,5 +1,5 @@
 FROM ubuntu:groovy
-LABEL maintainer "ManusiaRakitan <zcamel07@gmail.com>"
+LABEL maintainer "IrhamFadzillah <irham8381@gmail.com>"
 
 RUN ln -fs /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 RUN apt update && apt -y upgrade && apt install -y --no-install-recommends tzdata locales
@@ -186,7 +186,7 @@ RUN wget -N https://chromedriver.storage.googleapis.com/87.0.4280.20/chromedrive
     chmod 0755 /usr/bin/chromedriver
 
 # Install python requirements
-RUN pip3 install --no-cache-dir -r https://raw.githubusercontent.com/ManusiaRakitan/XBot-Remix/x-sql-extended/requirements.txt --use-feature=2020-resolver
+RUN pip3 install --no-cache-dir -r https://raw.githubusercontent.com/IrhamFadzillah/Yama/x-sql-extended/requirements.txt --use-feature=2020-resolver
 
 # Clean Up
 RUN apt-get clean --dry-run
